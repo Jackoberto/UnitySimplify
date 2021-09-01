@@ -36,13 +36,6 @@ namespace Simplify.FluentInstantiation.Example
                 .Instantiate();
             positionedAndParentedObject.name = "Positioned and Parent Object";
 
-            var prefabInstanceJustParent = FluentInstantiation
-                .InstantiateObject(prefab)
-                .WithInstantiator(new EditorInstantiator<GameObject>())
-                .ParentedTo(transform)
-                .Instantiate();
-            prefabInstanceJustParent.name = "Prefab Instance With Just Parent";
-
             var positionedRotatedAndParentedObject = FluentInstantiation
                 .InstantiateObject(prefab)
                 .AtPosition(new Vector3(1, 2, 3))
@@ -65,15 +58,6 @@ namespace Simplify.FluentInstantiation.Example
                 })
                 .ParentedTo(transform)
                 .Instantiate();
-
-            var prefabInstance = FluentInstantiation
-                .InstantiateObject(exampleGameObject)
-                .WithInstantiator(new EditorInstantiator<ExampleGameObject>())
-                .AtPosition(new Vector3(1, 3, 5))
-                .WithRotation(Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f)))
-                .ParentedTo(transform)
-                .Instantiate();
-            prefabInstance.name = "Prefab Instance";
         }
     }
 }
