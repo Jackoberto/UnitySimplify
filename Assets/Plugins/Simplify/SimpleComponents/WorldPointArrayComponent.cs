@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace Simplify.SimpleComponents
 {
-    public class WorldPointArrayComponent : MonoBehaviour, IEnumerable<WorldPoint>
+    public class WorldPointArrayComponent : MonoBehaviour, IReadOnlyList<WorldPoint>
     {
         [SerializeField] 
         private List<WorldPoint> worldPoints;
-
         private void Awake()
         {
             foreach (var worldPoint in this)
@@ -16,7 +15,6 @@ namespace Simplify.SimpleComponents
                 worldPoint.SetStartPosition();
             }
         }
-
         private void OnValidate()
         {
             if (worldPoints == null)
@@ -27,19 +25,9 @@ namespace Simplify.SimpleComponents
                     worldPoint.parent = transform;
             }
         }
-        
-        public List<WorldPoint> WorldPoints => worldPoints;
-
-        public WorldPoint this[int index]
-        {
-            get => worldPoints[index];
-            set => worldPoints[index] = value;
-        }
-
-        public int Length => worldPoints.Count;
-
+        public WorldPoint this[int index] => worldPoints[index];
+        public int Count => worldPoints.Count;
         public IEnumerator<WorldPoint> GetEnumerator() => worldPoints.GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

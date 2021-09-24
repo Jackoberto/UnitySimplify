@@ -37,7 +37,7 @@ namespace Plugins.Simplify.SimpleComponents
             if (!edit)
                 return;
             var worldPoints = target as WorldPointArrayComponent;
-            for (var i = 0; i < worldPoints.Length; i++)
+            for (var i = 0; i < worldPoints.Count; i++)
             {
                 DrawHandle(worldPoints[i], i);
             }
