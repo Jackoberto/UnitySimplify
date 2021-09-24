@@ -1,4 +1,3 @@
-using System;
 using Simplify.SimpleComponents;
 using UnityEditor;
 using UnityEditor.EditorTools;
@@ -10,15 +9,29 @@ namespace Plugins.Simplify.SimpleComponents
     internal class WorldPointEditor : Editor
     {
         private bool edit;
-        private PivotRotation pivotRotation;
 
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            var worldPointComponent = target as WorldPointComponent;
+            var newPosition = EditorGUILayout.Vector3Field("Position", worldPointComponent.LocalPosition);
+            if (newPosition != worldPointComponent.LocalPosition)
+            {
+                Undo.RecordObject(worldPointComponent, "Changed Position");
+                worldPointComponent.LocalPosition = newPosition;
+                SceneView.RepaintAll();
+            }
+            var newRotation = EditorGUILayout.Vector3Field("Rotation", worldPointComponent.LocalEulerRotation);
+            if (newRotation != worldPointComponent.LocalEulerRotation)
+            {
+                Undo.RecordObject(worldPointComponent, "Changed Rotation");
+                worldPointComponent.LocalEulerRotation = newRotation;
+                SceneView.RepaintAll();
+            }
             var label = edit ? "Stop Edit" : "Edit";
             if (GUILayout.Button(label))
             {
                 edit = !edit;
+                SceneView.RepaintAll();
             }
         }
 
@@ -26,12 +39,11 @@ namespace Plugins.Simplify.SimpleComponents
         {
             if (!edit)
                 return;
-            pivotRotation = Tools.pivotRotation;
             var worldPoint = target as WorldPointComponent;
             DrawHandle(worldPoint);
         }
-        
-        private void DrawHandle(WorldPointComponent worldPointComponent)
+
+        private static void DrawHandle(WorldPointComponent worldPointComponent)
         {
             switch (ToolManager.activeToolType.Name)
             {
@@ -52,28 +64,26 @@ namespace Plugins.Simplify.SimpleComponents
             }
         }
 
-        private void DrawPositionHandle(WorldPointComponent worldPointComponent)
+        private static void DrawPositionHandle(WorldPointComponent worldPointComponent)
         {
             EditorGUI.BeginChangeCheck();
-            var rot = pivotRotation == PivotRotation.Global ? Quaternion.identity : worldPointComponent.Rotation;
+            var rot = Tools.pivotRotation == PivotRotation.Global ? Quaternion.identity : worldPointComponent.Rotation;
             var newTargetPosition = Handles.PositionHandle(worldPointComponent.Position, rot);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(worldPointComponent, "Changed Target Position");
+                Undo.RecordObject(worldPointComponent, "Changed Position");
                 worldPointComponent.Position = newTargetPosition;
-                EditorUtility.SetDirty(worldPointComponent);
             }
         }
         
-        private void DrawRotateHandle(WorldPointComponent worldPointComponent)
+        private static void DrawRotateHandle(WorldPointComponent worldPointComponent)
         {
             EditorGUI.BeginChangeCheck();
             var newTargetRotation = Handles.RotationHandle(worldPointComponent.Rotation, worldPointComponent.Position);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(worldPointComponent, "Changed Target Rotation");
+                Undo.RecordObject(worldPointComponent, "Changed Rotation");
                 worldPointComponent.Rotation = newTargetRotation;
-                EditorUtility.SetDirty(worldPointComponent);
             }
         }
     }
