@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 905941041}
   - component: {fileID: 905941040}
   - component: {fileID: 905941039}
+  - component: {fileID: 905941044}
   m_Layer: 0
   m_Name: Parent
   m_TagString: Untagged
@@ -353,13 +354,50 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 905941038}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.73248017, y: -0.36299822, z: -0.20818627, w: 0.536995}
   m_LocalPosition: {x: 0.92, y: 4.8999944, z: -9.180038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 823374751}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 39.46, y: -115.846, z: -101.94}
+--- !u!114 &905941044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905941038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b7445f29b6417588a4c6ac97c8195e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldPoints:
+  - localPosition: {x: 3.8282437, y: 1, z: 1.5469294}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: 4.6488323, y: 1, z: 3.8972301}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: 3.2503939, y: 1, z: 7.148076}
+    localRotation: {x: -0, y: 0, z: 54.245975}
+    parent: {fileID: 905941043}
+  - localPosition: {x: 1, y: 1, z: 9.663569}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: -1.1507767, y: 1, z: 11.391609}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: -3.359585, y: 1, z: 8.391413}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: -3.5214734, y: 1, z: 4.5344577}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
+  - localPosition: {x: -2.389585, y: 1, z: 2.2532306}
+    localRotation: {x: 0, y: 0, z: 0}
+    parent: {fileID: 905941043}
 --- !u!1 &2047383266
 GameObject:
   m_ObjectHideFlags: 0

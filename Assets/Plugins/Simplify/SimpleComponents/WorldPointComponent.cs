@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Simplify.SimpleComponents
@@ -6,6 +7,12 @@ namespace Simplify.SimpleComponents
     {
         [SerializeField] 
         private WorldPoint worldPoint;
+
+        private void Awake()
+        {
+            worldPoint.SetStartPosition();
+        }
+
         public Quaternion LocalRotation
         {
             get => worldPoint.LocalRotation;
@@ -36,6 +43,7 @@ namespace Simplify.SimpleComponents
             set => worldPoint.Position = value;
         }
 
+        public Vector3 StartPosition => worldPoint.StartPosition;
         public Vector3 Forward => worldPoint.Forward;
         public Vector3 Back => worldPoint.Back;
         public Vector3 Right => worldPoint.Right;

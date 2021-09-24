@@ -5,28 +5,25 @@ using UnityEngine;
 
 namespace Plugins.Simplify.SimpleComponents
 {
-    [CustomEditor(typeof(WorldPointComponent))]
-    internal class WorldPointEditor : Editor
+    [CustomEditor(typeof(WorldPointArrayComponent))]
+    internal class WorldPointArrayEditor : Editor
     {
         private bool edit;
+        private static GUISkin guiSkin;
+
+        public static GUISkin GUISkin
+        {
+            get
+            {
+                if (guiSkin == null)
+                    guiSkin = Resources.Load<GUISkin>("NumberLabels");
+                return guiSkin;
+            }
+        }
 
         public override void OnInspectorGUI()
         {
-            var worldPointComponent = target as WorldPointComponent;
-            var newPosition = EditorGUILayout.Vector3Field("Position", worldPointComponent.LocalPosition);
-            if (newPosition != worldPointComponent.LocalPosition)
-            {
-                Undo.RecordObject(worldPointComponent, "Changed Position");
-                worldPointComponent.LocalPosition = newPosition;
-                SceneView.RepaintAll();
-            }
-            var newRotation = EditorGUILayout.Vector3Field("Rotation", worldPointComponent.LocalEulerRotation);
-            if (newRotation != worldPointComponent.LocalEulerRotation)
-            {
-                Undo.RecordObject(worldPointComponent, "Changed Rotation");
-                worldPointComponent.LocalEulerRotation = newRotation;
-                SceneView.RepaintAll();
-            }
+            base.OnInspectorGUI();
             var label = edit ? "Stop Edit" : "Edit";
             if (GUILayout.Button(label))
             {
@@ -39,36 +36,41 @@ namespace Plugins.Simplify.SimpleComponents
         {
             if (!edit)
                 return;
-            var worldPoint = target as WorldPointComponent;
-            DrawHandle(worldPoint);
+            var worldPoints = target as WorldPointArrayComponent;
+            for (var i = 0; i < worldPoints.Length; i++)
+            {
+                DrawHandle(worldPoints[i], i);
+            }
         }
 
-        private void DrawHandle(IWorldPoint worldPointComponent)
+        private void DrawHandle(IWorldPoint worldPointComponent, int i)
         {
             switch (ToolManager.activeToolType.Name)
             {
                 case "MoveTool":
-                    DrawPositionHandle(worldPointComponent);
+                    DrawPositionHandle(worldPointComponent, i);
                     break;
                 
                 case "RotateTool":
-                    DrawRotateHandle(worldPointComponent);
+                    DrawRotateHandle(worldPointComponent, i);
                     break;
 
                 case "TransformTool":
                 {
-                    DrawPositionHandle(worldPointComponent);
-                    DrawRotateHandle(worldPointComponent);
+                    DrawPositionHandle(worldPointComponent, i);
+                    DrawRotateHandle(worldPointComponent, i);
                     break;
                 }
             }
         }
 
-        private void DrawPositionHandle(IWorldPoint worldPointComponent)
+        private void DrawPositionHandle(IWorldPoint worldPointComponent, int i)
         {
             EditorGUI.BeginChangeCheck();
             var rot = Tools.pivotRotation == PivotRotation.Global ? Quaternion.identity : worldPointComponent.Rotation;
+            Handles.Label(worldPointComponent.Position, i.ToString());
             var newTargetPosition = Handles.PositionHandle(worldPointComponent.Position, rot);
+            Handles.Label(newTargetPosition, i.ToString());
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Changed Position");
@@ -76,10 +78,11 @@ namespace Plugins.Simplify.SimpleComponents
             }
         }
         
-        private void DrawRotateHandle(IWorldPoint worldPointComponent)
+        private void DrawRotateHandle(IWorldPoint worldPointComponent, int i)
         {
             EditorGUI.BeginChangeCheck();
             var newTargetRotation = Handles.RotationHandle(worldPointComponent.Rotation, worldPointComponent.Position);
+            Handles.Label(worldPointComponent.Position, i.ToString());
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Changed Rotation");

@@ -12,6 +12,7 @@ namespace Simplify.SimpleComponents
         private Vector3 localRotation = Vector3.zero;
         [HideInInspector]
         public Transform parent;
+
         public WorldPoint(Transform parent)
         {
             this.parent = parent;
@@ -44,6 +45,13 @@ namespace Simplify.SimpleComponents
         {
             get => localPosition + parent.position;
             set => localPosition = value - parent.position;
+        }
+
+        public Vector3 StartPosition { get; private set; }
+
+        public void SetStartPosition()
+        {
+            StartPosition = Position;
         }
 
         public Vector3 Forward => Rotation * Vector3.forward;
