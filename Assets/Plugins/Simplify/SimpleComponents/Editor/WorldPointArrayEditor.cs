@@ -68,7 +68,7 @@ namespace Plugins.Simplify.SimpleComponents
         {
             EditorGUI.BeginChangeCheck();
             var rot = Tools.pivotRotation == PivotRotation.Global ? Quaternion.identity : worldPointComponent.Rotation;
-            Handles.Label(worldPointComponent.Position, i.ToString());
+            Handles.Label(worldPointComponent.Position, i.ToString(), GUISkin.label);
             var newTargetPosition = Handles.PositionHandle(worldPointComponent.Position, rot);
             Handles.Label(newTargetPosition, i.ToString());
             if (EditorGUI.EndChangeCheck())
@@ -82,7 +82,7 @@ namespace Plugins.Simplify.SimpleComponents
         {
             EditorGUI.BeginChangeCheck();
             var newTargetRotation = Handles.RotationHandle(worldPointComponent.Rotation, worldPointComponent.Position);
-            Handles.Label(worldPointComponent.Position, i.ToString());
+            Handles.Label(worldPointComponent.Position, i.ToString(), GUISkin.label);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(target, "Changed Rotation");
