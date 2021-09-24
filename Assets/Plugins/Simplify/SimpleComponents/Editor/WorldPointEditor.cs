@@ -1,3 +1,4 @@
+using System;
 using Simplify.SimpleComponents;
 using UnityEditor;
 using UnityEditor.EditorTools;
@@ -5,8 +6,8 @@ using UnityEngine;
 
 namespace Plugins.Simplify.SimpleComponents
 {
-    [CustomEditor(typeof(WorldPoint))]
-    public class WorldPointEditor : Editor
+    [CustomEditor(typeof(WorldPointComponent))]
+    internal class WorldPointEditor : Editor
     {
         private bool edit;
         private PivotRotation pivotRotation;
@@ -26,60 +27,53 @@ namespace Plugins.Simplify.SimpleComponents
             if (!edit)
                 return;
             pivotRotation = Tools.pivotRotation;
-            var worldPoint = target as WorldPoint;
+            var worldPoint = target as WorldPointComponent;
             DrawHandle(worldPoint);
         }
         
-        private void DrawHandle(WorldPoint relativeWorldPoint)
+        private void DrawHandle(WorldPointComponent worldPointComponent)
         {
             switch (ToolManager.activeToolType.Name)
             {
                 case "MoveTool":
-                    DrawPositionHandle(relativeWorldPoint);
+                    DrawPositionHandle(worldPointComponent);
                     break;
                 
                 case "RotateTool":
-                    DrawRotateHandle(relativeWorldPoint);
+                    DrawRotateHandle(worldPointComponent);
                     break;
 
                 case "TransformTool":
                 {
-                    DrawPositionHandle(relativeWorldPoint);
-                    DrawRotateHandle(relativeWorldPoint);
+                    DrawPositionHandle(worldPointComponent);
+                    DrawRotateHandle(worldPointComponent);
                     break;
                 }
-                
-                default: 
-                    DrawPositionHandle(relativeWorldPoint);
-                    break;
             }
         }
 
-        private void DrawPositionHandle(WorldPoint relativeWorldPoint)
+        private void DrawPositionHandle(WorldPointComponent worldPointComponent)
         {
-            var rotation = relativeWorldPoint.Rotation.eulerAngles + relativeWorldPoint.transform.rotation.eulerAngles;
-            var rot = pivotRotation == PivotRotation.Global ? Quaternion.identity : Quaternion.Euler(rotation);
             EditorGUI.BeginChangeCheck();
-            var newTargetPosition = Handles.PositionHandle(relativeWorldPoint.transform.position + relativeWorldPoint.Position, rot);
+            var rot = pivotRotation == PivotRotation.Global ? Quaternion.identity : worldPointComponent.Rotation;
+            var newTargetPosition = Handles.PositionHandle(worldPointComponent.Position, rot);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(relativeWorldPoint, "Changed Target Position");
-                relativeWorldPoint.Position = newTargetPosition - relativeWorldPoint.transform.position;
-                EditorUtility.SetDirty(relativeWorldPoint);
+                Undo.RecordObject(worldPointComponent, "Changed Target Position");
+                worldPointComponent.Position = newTargetPosition;
+                EditorUtility.SetDirty(worldPointComponent);
             }
         }
         
-        private void DrawRotateHandle(WorldPoint relativeWorldPoint)
+        private void DrawRotateHandle(WorldPointComponent worldPointComponent)
         {
             EditorGUI.BeginChangeCheck();
-            var rotation = relativeWorldPoint.Rotation.eulerAngles + relativeWorldPoint.transform.rotation.eulerAngles;
-            var newTargetRotation = Handles.RotationHandle(Quaternion.Euler(rotation), 
-                relativeWorldPoint.transform.position + relativeWorldPoint.Position);
+            var newTargetRotation = Handles.RotationHandle(worldPointComponent.Rotation, worldPointComponent.Position);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(relativeWorldPoint, "Changed Target Rotation");
-                relativeWorldPoint.rotationEuler = newTargetRotation.eulerAngles - relativeWorldPoint.transform.rotation.eulerAngles;
-                EditorUtility.SetDirty(relativeWorldPoint);
+                Undo.RecordObject(worldPointComponent, "Changed Target Rotation");
+                worldPointComponent.Rotation = newTargetRotation;
+                EditorUtility.SetDirty(worldPointComponent);
             }
         }
     }
